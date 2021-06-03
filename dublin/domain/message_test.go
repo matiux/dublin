@@ -13,7 +13,7 @@ func Test_it_has_getters(t *testing.T) {
 	metadata := Metadata{MetadataValuesT{"foo": "bar"}}
 	messageType := "domain.SomeEvent"
 
-	domainMessage := Message.recordNow(id, playhead, metadata, payload)
+	domainMessage := RecordDomainNow(id, playhead, metadata, payload)
 
 	assert.Equal(t, id, domainMessage.id)
 	assert.Equal(t, payload, domainMessage.payload)
@@ -24,7 +24,7 @@ func Test_it_has_getters(t *testing.T) {
 
 func Test_it_returns_a_new_instance_with_more_metadata_on_and_metadata(t *testing.T) {
 
-	domainMessage := Message.recordNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")
+	domainMessage := RecordDomainNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")
 	newDomainMessage := domainMessage.andMetadata(NewMetadataKV("key", "value"))
 
 	assert.NotEqual(t, domainMessage, newDomainMessage)
@@ -35,7 +35,7 @@ func Test_it_returns_a_new_instance_with_more_metadata_on_and_metadata(t *testin
 
 func Test_it_keeps_all_data_the_same_expect_metadata_on_and_metadata(t *testing.T) {
 
-	domainMessage := Message.recordNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")
+	domainMessage := RecordDomainNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")
 	newDomainMessage := domainMessage.andMetadata(NewMetadataKV("key", "value"))
 
 	assert.Equal(t, domainMessage.id, newDomainMessage.id)
@@ -49,12 +49,12 @@ func Test_it_keeps_all_data_the_same_expect_metadata_on_and_metadata(t *testing.
 
 func Test_it_merges_the_metadata_instances_on_and_metadata(t *testing.T) {
 
-	domainMessage := Message.recordNow("message_id", 42, NewMetadataKV("key", "value"), "payload")
-	newDomainMessage := domainMessage.andMetadata(NewMetadataKV("foo", "bar"))
+	domainMessage := RecordDomainNow("message_id", 42, NewMetadataKV("key", "value"), "payload").
+		andMetadata(NewMetadataKV("foo", "bar"))
 
 	expected := Metadata{MetadataValuesT{"key": "value", "foo": "bar"}}
 
-	assert.Equal(t, expected, newDomainMessage.metadata)
+	assert.Equal(t, expected, domainMessage.metadata)
 }
 
 type SomeEvent struct {
