@@ -1,0 +1,23 @@
+package domain
+
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+func Test_it_returns_all_events_when_traversing(t *testing.T) {
+
+	expected := []Message{RecordDomainNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")}
+	domainMessage := RecordDomainNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")
+
+	iterator := NewEventStream([]Message{domainMessage}).getIterator()
+
+	var events []Message
+
+	for e := iterator.Front(); e != nil; e = e.Next() {
+		events = append(events, e.Value.(Message))
+	}
+
+	assert.Len(t, events, 1)
+	assert.Equal(t, expected[0].id, events[0].id)
+}
