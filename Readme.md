@@ -11,5 +11,7 @@ go mod tidy
 
 ## Running test
 ```shell
+go clean -cache
+go clean -testcache
 go test ./... -v
 ```
