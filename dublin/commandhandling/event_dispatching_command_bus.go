@@ -1,11 +1,13 @@
 package commandhandling
 
-import "github.com/matiux/dublin/dublin/eventdispatcher"
+import (
+	"github.com/matiux/dublin/dublin/eventdispatcher"
+)
 
-const event_command_success = "dublin.command_handling.command_success"
-const event_command_failure = "dublin.command_handling.command_failure"
+const EventCommandSuccess = "dublin.command_handling.command_success"
+const EventCommandFailure = "dublin.command_handling.command_failure"
 
-// EventDispatchingCommandBus dispatches events signalling whether a command was executed successfully or if it failed.
+// EventDispatchingCommandBus dispatches events signal<l>ing whether a command was executed successfully or if it failed.
 // Is a Command bus decorator that dispatches events.
 type EventDispatchingCommandBus struct {
 	CommandBus
@@ -18,13 +20,39 @@ func (cb *EventDispatchingCommandBus) Subscribe(commandHandler CommandHandler) {
 
 func (cb *EventDispatchingCommandBus) Dispatch(command Command) error {
 
-	_ = cb.CommandBus.Dispatch(command)
+	defer func() {
+		if r := recover(); r != nil {
+			_ = cb.EventDispatcher.Dispatch(EventCommandFailure, map[string]interface{}{
+				"command":   command,
+				"exception": r,
+			})
+		}
+	}()
 
-	arguments := map[string]interface{}{
-		"command": command,
-	}
-
-	cb.EventDispatcher.Dispatch(event_command_success, arguments)
+	cb.commandBusOrFail(command)
+	cb.eventDispatchingCommandBusOrFail(command)
 
 	return nil
+}
+
+func (cb *EventDispatchingCommandBus) commandBusOrFail(command Command) {
+
+	if err := cb.CommandBus.Dispatch(command); err != nil {
+		panic(err)
+	}
+}
+
+func (cb *EventDispatchingCommandBus) eventDispatchingCommandBusOrFail(command Command) {
+
+	err := cb.EventDispatcher.Dispatch(EventCommandSuccess, map[string]interface{}{
+		"command": command,
+	})
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func NewEventDispatchingCommandBus(commandBus CommandBus, eventDispatcher eventdispatcher.EventDispatcher) *EventDispatchingCommandBus {
+	return &EventDispatchingCommandBus{commandBus, eventDispatcher}
 }
