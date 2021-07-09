@@ -9,7 +9,7 @@ type EventStream struct {
 	messages []Message
 }
 
-func (es EventStream) getIterator() *list.List {
+func (es EventStream) GetIterator() *list.List {
 
 	l := list.New()
 

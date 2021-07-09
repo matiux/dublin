@@ -19,7 +19,7 @@ func Test_it_has_getters(t *testing.T) {
 	assert.Equal(t, payload, domainMessage.payload)
 	assert.Equal(t, playhead, domainMessage.playhead)
 	assert.Equal(t, metadata, domainMessage.metadata)
-	assert.Equal(t, messageType, domainMessage.getType())
+	assert.Equal(t, messageType, domainMessage.GetType())
 }
 
 func Test_it_returns_a_new_instance_with_more_metadata_on_and_metadata(t *testing.T) {

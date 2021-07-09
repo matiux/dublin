@@ -14,7 +14,7 @@ type Message struct {
 	recordedOn time.Time
 }
 
-func (dm Message) getType() string {
+func (dm Message) GetType() string {
 	return reflect.TypeOf(dm.payload).String()
 }
 
