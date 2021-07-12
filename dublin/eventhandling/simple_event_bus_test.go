@@ -1,8 +1,10 @@
 package eventhandling
 
 import (
+	"fmt"
 	"github.com/golang/mock/gomock"
 	"github.com/matiux/dublin/dublin/domain"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -91,7 +93,30 @@ func Test_it_does_not_dispatch_new_events_before_all_listeners_have_run(t *testi
 
 func Test_it_should_still_publish_events_after_exception(t *testing.T) {
 
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
+	setup(t)
+
+	domainMessage1 := createDomainMessage(map[string]string{"foo": "bar"})
+	domainMessage2 := createDomainMessage(map[string]string{"foo": "bas"})
+
+	domainEventStream1 := domain.NewEventStream([]domain.Message{domainMessage1})
+	domainEventStream2 := domain.NewEventStream([]domain.Message{domainMessage2})
+
+	eventListener := NewMockEventListener(ctrl)
+	gomock.InOrder(
+		eventListener.EXPECT().Handle(domainMessage1).Return(fmt.Errorf("an error")),
+		eventListener.EXPECT().Handle(domainMessage2),
+	)
+
+	eventBus.Subscribe(eventListener)
+
+	if err := eventBus.Publish(domainEventStream1); err != nil {
+		assert.Equal(t, "Error in Event Listener `EventListener` with Message `map[string]string`. Original error: an error", err.Error())
+	}
+
+	_ = eventBus.Publish(domainEventStream2)
 }
 
 type SimpleEventBusTestEvent interface{}
