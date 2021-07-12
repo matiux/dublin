@@ -29,6 +29,6 @@ func (dm Message) andMetadata(metadata Metadata) Message {
 //	return &Message{playhead, metadata, payload, id, time.Now()}
 //}
 
-func RecordDomainNow(id string, playhead int, metadata Metadata, payload interface{}) Message {
+func RecordMessageNow(id string, playhead int, metadata Metadata, payload interface{}) Message {
 	return Message{playhead, metadata, payload, id, time.Now()}
 }

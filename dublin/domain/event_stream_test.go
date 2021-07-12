@@ -7,8 +7,8 @@ import (
 
 func Test_it_returns_all_events_when_traversing(t *testing.T) {
 
-	expected := []Message{RecordDomainNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")}
-	domainMessage := RecordDomainNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")
+	expected := []Message{RecordMessageNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")}
+	domainMessage := RecordMessageNow("message_id", 42, NewMetadata(MetadataValuesT{}), "payload")
 
 	iterator := NewEventStream([]Message{domainMessage}).GetIterator()
 
