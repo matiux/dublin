@@ -3,7 +3,7 @@ name: "Fix coding standards violations"
 on:
   push:
     branches:
-      - "master"
+      - "main"
   schedule:
     - cron: "37 13 * * 2"
   workflow_dispatch:
