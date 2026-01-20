@@ -14,9 +14,12 @@ declare(strict_types=1);
 namespace Broadway\Auditing;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class CommandLoggerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TraceableLogger
      */

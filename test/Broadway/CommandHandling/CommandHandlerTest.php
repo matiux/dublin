@@ -44,7 +44,7 @@ class CommandHandlerTest extends TestCase
         $commandHandler->handle($command);
     }
 
-    public function unresolvableCommands()
+    public static function unresolvableCommands(): array
     {
         return [
             [null],

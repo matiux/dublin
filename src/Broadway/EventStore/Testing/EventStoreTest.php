@@ -117,11 +117,7 @@ abstract class EventStoreTest extends TestCase
     {
         $id = new IdentityThatCannotBeConvertedToAString();
 
-        if (PHP_VERSION_ID >= 70400) {
-            $this->expectException(\Throwable::class);
-        } else {
-            $this->expectException(Error::class);
-        }
+        $this->expectException(\Error::class);
 
         $this->expectExceptionMessage(sprintf(
             'Object of class %s could not be converted to string',
@@ -187,7 +183,7 @@ abstract class EventStoreTest extends TestCase
         );
     }
 
-    public function idDataProvider()
+    public static function idDataProvider(): array
     {
         return [
             'Simple String' => [

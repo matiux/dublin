@@ -19,9 +19,12 @@ use Broadway\EventStore\ConcurrencyConflictResolver\ConcurrencyConflictResolver;
 use Broadway\EventStore\Testing\EventStoreTest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ConflictResolvingEventStoreTest extends EventStoreTest
 {
+    use ProphecyTrait;
+
     /** @var ConcurrencyConflictResolver|MockObject */
     protected $concurrencyResolver;
 

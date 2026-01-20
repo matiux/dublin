@@ -113,7 +113,7 @@ class DateTimeTest extends TestCase
         $this->assertInstanceOf(\DateTimeImmutable::class, DateTime::now()->toNative());
     }
 
-    public function provideDatesAndIntervals()
+    public static function provideDatesAndIntervals(): array
     {
         return [
             ['2015-03-14T00:00:00.000000+00:00', 'P6W',            '2015-04-25T00:00:00.000000+00:00'],
@@ -133,7 +133,7 @@ class DateTimeTest extends TestCase
         $this->assertEquals($expectedBeginningOfWeek, $beginningOfWeek->toString());
     }
 
-    public function provideBeginningOfWeek()
+    public static function provideBeginningOfWeek(): array
     {
         return [
             ['2015-03-14T00:00:00.000000+00:00', '2015-03-09T00:00:00.000000+00:00'],
@@ -142,7 +142,7 @@ class DateTimeTest extends TestCase
         ];
     }
 
-    public function provideDateDiffs()
+    public static function provideDateDiffs(): array
     {
         return [
             ['2014-04-22T13:37:42.123456+02:00', '2014-04-23T13:37:42.123456+02:00', ['ymdhis' => '001000', 'days' => 1,  'invert' => 0]],
@@ -151,7 +151,7 @@ class DateTimeTest extends TestCase
         ];
     }
 
-    public function provideGreaterThanDates()
+    public static function provideGreaterThanDates(): array
     {
         return [
             ['2014-05-01T12:00:00.000000+00:00', '2014-05-01T12:00:00.000000+00:00', false], // equal

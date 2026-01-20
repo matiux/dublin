@@ -80,10 +80,6 @@ class Scenario
 
     public function when(callable $when): self
     {
-        if (!is_callable($when)) {
-            return $this;
-        }
-
         if (null === $this->aggregateRootInstance) {
             $this->aggregateRootInstance = $when($this->aggregateRootInstance);
 

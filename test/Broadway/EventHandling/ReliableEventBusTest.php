@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Vonq\Webshop\Tests\Broadway\EventHandling;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Broadway\Domain\DomainEventStream;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
@@ -17,6 +18,8 @@ use Psr\Log\LoggerInterface;
 
 class ReliableEventBusTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ReliableEventBus
      */
@@ -48,7 +51,7 @@ class ReliableEventBusTest extends TestCase
 
         $eventListener1 = $this->createEventListenerMock();
         $eventListener1
-            ->expects($this->at(0))
+            ->expects($this->exactly(0))
             ->method('handle')
             ->willThrowException(new \Exception());
 
@@ -92,21 +95,21 @@ class ReliableEventBusTest extends TestCase
 
         $eventListener1 = $this->createEventListenerMock();
         $eventListener1
-            ->expects($this->at(0))
+            ->expects($this->exactly(0))
             ->method('handle')
             ->with($domainMessage1);
         $eventListener1
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('handle')
             ->with($domainMessage2);
 
         $eventListener2 = $this->createEventListenerMock();
         $eventListener2
-            ->expects($this->at(0))
+            ->expects($this->exactly(0))
             ->method('handle')
             ->with($domainMessage1);
         $eventListener2
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('handle')
             ->with($domainMessage2);
 
@@ -129,11 +132,11 @@ class ReliableEventBusTest extends TestCase
 
         $eventListener2 = $this->createEventListenerMock();
         $eventListener2
-            ->expects($this->at(0))
+            ->expects($this->exactly(0))
             ->method('handle')
             ->with($domainMessage1);
         $eventListener2
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('handle')
             ->with($domainMessage2);
 
@@ -155,13 +158,13 @@ class ReliableEventBusTest extends TestCase
 
         $eventListener = $this->createEventListenerMock();
         $eventListener
-            ->expects($this->at(0))
+            ->expects($this->exactly(0))
             ->method('handle')
             ->with($domainMessage1)
             ->will($this->throwException(new \Exception('I failed.')));
 
         $eventListener
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('handle')
             ->with($domainMessage2);
 

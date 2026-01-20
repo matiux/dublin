@@ -51,12 +51,12 @@ class SimpleCommandBusTest extends TestCase
         $commandHandler = $this->createMock(CommandHandler::class);
 
         $commandHandler
-            ->expects($this->at(0))
+            ->expects($this->exactly(0))
             ->method('handle')
             ->with($command1);
 
         $commandHandler
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('handle')
             ->with($command2);
 
@@ -77,13 +77,13 @@ class SimpleCommandBusTest extends TestCase
         $simpleHandler = $this->createMock(CommandHandler::class);
 
         $commandHandler
-            ->expects($this->at(0))
+            ->expects($this->exactly(0))
             ->method('handle')
             ->with($command1)
             ->will($this->throwException(new \Exception('I failed.')));
 
         $commandHandler
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('handle')
             ->with($command2);
 

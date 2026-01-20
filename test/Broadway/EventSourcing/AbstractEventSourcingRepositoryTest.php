@@ -70,7 +70,7 @@ abstract class AbstractEventSourcingRepositoryTest extends TestCase
         $this->repository->save($aggregate);
     }
 
-    public function objectsNotOfConfiguredClass()
+    public static function objectsNotOfConfiguredClass(): array
     {
         return [
             [new TestAggregate()],
