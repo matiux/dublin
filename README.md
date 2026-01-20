@@ -1,46 +1,49 @@
-Broadway
-========
+Dublin
+======
 
-Broadway is a project providing infrastructure and testing helpers for creating
-CQRS and event sourced applications. Broadway tries hard to not get in your
-way. The project contains several loosely coupled components that can be used
-together to provide a full CQRS\ES experience.
+Dublin is a maintained and modernized fork of the original **Broadway** project.
 
-![build status](https://github.com/broadway/broadway/actions/workflows/ci.yml/badge.svg)
+It provides infrastructure and testing helpers for building **CQRS** and
+**Event Sourced** applications in PHP, with a strong focus on explicit
+models, clear boundaries and minimal framework intrusion.
+
+Dublin continues the original vision of Broadway while evolving it to support
+modern PHP versions and current development practices.
+
+![build status](https://github.com/matiux/dublin/actions/workflows/ci.yml/badge.svg)
+
+---
+
+## Fork origin and intent
+
+Dublin is a fork of the **Broadway** project  
+(https://github.com/broadway/broadway), originally developed by the Broadway
+contributors and the team at Qandidate.
+
+The original project is no longer actively maintained.  
+The goal of Dublin is to:
+
+- keep the project **alive and maintained**
+- support **modern PHP versions (8.4+)**
+- modernize tooling, CI and testing infrastructure
+- evolve the codebase while preserving the original design philosophy
+
+Where possible, Dublin aims to remain **API-compatible** with Broadway.
+
+---
 
 ## About
 
-Read the blog post about this repository at:
-- http://labs.qandidate.com/blog/2014/08/26/broadway-our-cqrs-es-framework-open-sourced/
+Like Broadway, Dublin provides a set of loosely coupled components that can be
+used independently or together to build CQRS and Event Sourced systems.
+
+Dublin intentionally stays out of your way: no mandatory frameworks, no hidden
+magic, no forced architectural choices.
+
+---
 
 ## Installation
 
+```bash
+composer require matiux/dublin
 ```
-$ composer require broadway/broadway
-```
-
-## Documentation
-You can find detailed documentation of the Broadway bundle on [broadway.github.io/broadway](https://broadway.github.io/broadway/).
-
-Feel free to join #qandidate on freenode with questions and remarks!
-
-## Acknowledgements
-
-The broadway project is heavily inspired by other open source project such as
-[AggregateSource], [Axon Framework] and [Ncqrs].
-
-[Axon Framework]: http://www.axonframework.org/
-[Ncqrs]: https://github.com/ncqrs/ncqrs
-[AggregateSource]: https://github.com/yreynhout/AggregateSource
-
-We also like to thank [Benjamin], [Marijn] and [Mathias] for the conversations
-we had along the way that helped us shape the broadway project. In particular
-Marijn for giving us access to his in-house developed CQRS framework.
-
-[Benjamin]: https://twitter.com/beberlei
-[Marijn]: https://twitter.com/huizendveld
-[Mathias]: https://twitter.com/mathiasverraes
-
-## License
-
-MIT, see LICENSE.
