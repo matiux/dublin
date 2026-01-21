@@ -42,6 +42,22 @@ magic, no forced architectural choices.
 
 ---
 
+## Architecture documentation (Structurizr)
+
+This project includes Structurizr documentation. After building the project
+and starting the containers, the docs are available at:
+
+http://localhost:8080/
+
+Build and run:
+
+```bash
+make build-php ARG="--no-cache"
+make upd
+```
+
+---
+
 ## Installation
 
 ```bash
