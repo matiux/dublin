@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         backupGlobals="false"
+         colors="true"
+         stopOnFailure="true"
+         stopOnError="true"
+         failOnDeprecation="true"
+         failOnNotice="true"
+         failOnWarning="true"
+         bootstrap="../../vendor/autoload.php"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+>
+
+    <php>
+        <ini name="display_errors" value="1" />
+        <ini name="error_reporting" value="-1" />
+        <server name="SHELL_VERBOSITY" value="-1" />
+    </php>
+
+    <testsuites>
+        <testsuite name="Dublin Test Suite">
+            <directory suffix="Test.php">../../tests</directory>
+
+            <exclude>../../tests/Broadway/EventSourcing/AbstractEventSourcingRepositoryTest.php</exclude>
+            <exclude>../../tests/Broadway/EventStore/ConcurrencyConflictResolver/ConcurrencyConflictResolverTest.php</exclude>
+        </testsuite>
+
+    </testsuites>
+
+    <source ignoreSuppressionOfDeprecations="true"
+            ignoreIndirectDeprecations="true"
+            restrictNotices="true"
+            restrictWarnings="true"
+    >
+        <include>
+            <directory>../../src</directory>
+        </include>
+
+    </source>
+
+    <groups>
+        <exclude>
+            <group>functional</group>
+        </exclude>
+    </groups>
+</phpunit>

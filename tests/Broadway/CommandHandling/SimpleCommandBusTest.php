@@ -43,66 +43,68 @@ class SimpleCommandBusTest extends TestCase
     /**
      * @test
      */
-    public function it_does_not_handle_new_commands_before_all_commandhandlers_have_run()
+    public function it_does_not_handle_new_commands_before_all_commandhandlers_have_run(): void
     {
         $command1 = ['foo' => 'bar'];
         $command2 = ['foo' => 'bas'];
 
+        $calls = [];
+
         $commandHandler = $this->createMock(CommandHandler::class);
-
         $commandHandler
-            ->expects($this->exactly(0))
+            ->expects($this->exactly(2))
             ->method('handle')
-            ->with($command1);
-
-        $commandHandler
-            ->expects($this->exactly(1))
-            ->method('handle')
-            ->with($command2);
+            ->willReturnCallback(function (array $command) use (&$calls): void {
+                $calls[] = $command;
+            });
 
         $this->commandBus->subscribe(new SimpleCommandBusTestHandler($this->commandBus, $command2));
         $this->commandBus->subscribe($commandHandler);
+
         $this->commandBus->dispatch($command1);
+
+        $this->assertSame([$command1, $command2], $calls);
     }
 
     /**
      * @test
      */
-    public function it_should_still_handle_commands_after_exception()
+    public function it_should_still_handle_commands_after_exception(): void
     {
         $command1 = ['foo' => 'bar'];
         $command2 = ['foo' => 'bas'];
 
-        $commandHandler = $this->createMock(CommandHandler::class);
-        $simpleHandler = $this->createMock(CommandHandler::class);
+        $failingHandler = $this->createMock(CommandHandler::class);
+        $simpleHandler  = $this->createMock(CommandHandler::class);
 
-        $commandHandler
-            ->expects($this->exactly(0))
+        // Il failing handler potrebbe lanciare su command1 (ma non assumiamo altro)
+        $failingHandler
             ->method('handle')
-            ->with($command1)
-            ->will($this->throwException(new \Exception('I failed.')));
+            ->willReturnCallback(function (array $command) use ($command1): void {
+                if ($command === $command1) {
+                    throw new \Exception('I failed.');
+                }
+            });
 
-        $commandHandler
-            ->expects($this->exactly(1))
-            ->method('handle')
-            ->with($command2);
-
+        // Ci interessa che command2 venga gestito dopo l'eccezione
         $simpleHandler
             ->expects($this->once())
             ->method('handle')
             ->with($command2);
 
-        $this->commandBus->subscribe($commandHandler);
+        $this->commandBus->subscribe($failingHandler);
         $this->commandBus->subscribe($simpleHandler);
 
         try {
             $this->commandBus->dispatch($command1);
+            $this->fail('Expected exception was not thrown.');
         } catch (\Exception $e) {
-            $this->assertEquals('I failed.', $e->getMessage());
+            $this->assertSame('I failed.', $e->getMessage());
         }
 
         $this->commandBus->dispatch($command2);
     }
+
 
     private function createCommandHandlerMock(array $expectedCommand): MockObject
     {

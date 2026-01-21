@@ -19,6 +19,46 @@ on:
     - cron: "37 13 * * 1"
 
 jobs:
+  static-analysis:
+    name: "static analysis"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "installing PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.5"
+          ini-values: memory_limit=-1
+          tools: composer:v2, cs2pr
+          extensions: bcmath, mbstring, intl, sodium, json
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: "running static analysis"
+        run: ./tools/bin/project/project stan
+  coding-standards:
+    name: "coding standards"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@v2"
+
+      - name: "installing PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.5"
+          ini-values: memory_limit=-1
+          tools: composer:v2, cs2pr
+          extensions: bcmath, mbstring, intl, sodium, json
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: "coding-standard-check"
+        run: ./tools/bin/project/project coding-standard-check-all
   tests:
     name: "Tests (PHP ${{ matrix.php-version }})"
     runs-on: "ubuntu-22.04"
@@ -48,27 +88,4 @@ jobs:
           composer-options: "--no-interaction --prefer-dist --ansi"
 
       - name: "Run tests"
-        run: "make test"
-
-  qa:
-    name: "QA (CS Fixer + PHPStan) (PHP 8.5)"
-    runs-on: "ubuntu-22.04"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          php-version: "8.5"
-          coverage: "none"
-          tools: "composer:v2"
-
-      - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v3"
-        with:
-          composer-options: "--no-interaction --prefer-dist --ansi"
-
-      - name: "Run QA"
-        run: "make qa"
+        run: ./tools/bin/project/project phpunit-tdox

@@ -98,7 +98,7 @@ class CommandLoggerTest extends TestCase
 
         $this->assertEquals('Yolo', $loggedData['exception']['message']);
         $this->assertEquals('Broadway\Auditing\MyException', $loggedData['exception']['class']);
-        $this->assertStringEndsWith('test/Broadway/Auditing/CommandLoggerTest.php', $loggedData['exception']['file']);
+        $this->assertStringEndsWith('tests/Broadway/Auditing/CommandLoggerTest.php', $loggedData['exception']['file']);
     }
 }
 

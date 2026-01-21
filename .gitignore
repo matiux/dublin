@@ -2,3 +2,12 @@
 composer.lock
 .php-cs-fixer.cache
 .phpunit.result.cache
+
+# Structurizr local files
+docs/.structurizr/
+docs/workspace.json
+
+###> Docker ###
+docker/docker-compose.override.yml
+docker/.env
+###< Docker ###

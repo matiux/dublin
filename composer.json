@@ -1,68 +1,86 @@
 {
-    "name": "matiux/dublin",
-    "description": "Infrastructure and testing helpers for creating CQRS and event sourced applications.",
-    "keywords": ["cqrs", "event sourcing", "domain-driven design", "ddd"],
-    "license": "MIT",
-    "require": {
-        "beberlei/assert": "^3.0",
-        "broadway/uuid-generator": "^1.0",
-        "php": ">=8.4"
+  "name": "matiux/dublin",
+  "description": "Infrastructure and testing helpers for creating CQRS and event sourced applications.",
+  "keywords": [
+    "cqrs",
+    "event sourcing",
+    "domain-driven design",
+    "ddd"
+  ],
+  "license": "MIT",
+  "require": {
+    "beberlei/assert": "^3.3.3",
+    "broadway/uuid-generator": "^1.0",
+    "php": ">=8.4"
+  },
+  "authors": [
+    {
+      "name": "Alexander",
+      "email": "iam.asm89@gmail.com"
     },
-    "authors": [
-      {
-        "name": "Alexander",
-        "email": "iam.asm89@gmail.com"
-      },
-      {
-        "name": "Emil",
-        "email": "emil@broekmeulen.com"
-      },
-      {
-        "name": "Fritsjan",
-        "email": "fritsjan@qandidate.com"
-      },
-      {
-        "name": "othillo",
-        "email": "othillo@othillo.nl"
-      },
-      {
-        "name": "Willem-Jan",
-        "email": "wjzijderveld@gmail.com"
-      },
-      {
-        "name": "Qandidate.com",
-        "homepage": "http://labs.qandidate.com/"
-      },
-      {
-        "name": "Matteo Galacci",
-        "email": "m.galacci@gmail.com"
-      }
-    ],
-    "require-dev": {
-        "monolog/monolog": "~2.0",
-        "phpunit/phpunit": "^11.0",
-        "ramsey/uuid": "^4.0",
-        "broadway/coding-standard": "^1.2",
-        "phpstan/phpstan": "^2.1",
-        "psr/log": "^1.1.4",
-        "phpspec/prophecy": "^1.15",
-        "phpspec/prophecy-phpunit": "^2.2"
+    {
+      "name": "Emil",
+      "email": "emil@broekmeulen.com"
     },
-    "suggest": {
-        "psr/log-implementation": "Implementation for PSR3, LoggerInterface",
-        "broadway/event-store-dbal": "Event store implementation using doctrine/dbal",
-        "broadway/read-model-elasticsearch": "Elasticsearch read model implementation",
-        "broadway/broadway-saga": "Saga component for Broadway",
-        "matiux/dublin-bundle": "Symfony bundle for matiux/dublin"
+    {
+      "name": "Fritsjan",
+      "email": "fritsjan@qandidate.com"
     },
-    "autoload": {
-        "psr-4": {
-            "Broadway\\": "src/Broadway/"
-        }
+    {
+      "name": "othillo",
+      "email": "othillo@othillo.nl"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Broadway\\": "test/Broadway/"
-        }
+    {
+      "name": "Willem-Jan",
+      "email": "wjzijderveld@gmail.com"
+    },
+    {
+      "name": "Qandidate.com",
+      "homepage": "http://labs.qandidate.com/"
+    },
+    {
+      "name": "Matteo Galacci",
+      "email": "m.galacci@gmail.com"
     }
+  ],
+  "require-dev": {
+    "monolog/monolog": "^2.11",
+    "phpunit/phpunit": "^11.5.48",
+    "ramsey/uuid": "^4.9.2",
+    "broadway/coding-standard": "^1.2.1",
+    "phpstan/phpstan": "^2.1.35",
+    "psr/log": "^1.1.4",
+    "phpspec/prophecy": "^1.24",
+    "phpspec/prophecy-phpunit": "^2.4",
+    "matiux/php-project-autopilot": "dev-master"
+  },
+  "suggest": {
+    "psr/log-implementation": "Implementation for PSR3, LoggerInterface",
+    "broadway/event-store-dbal": "Event store implementation using doctrine/dbal",
+    "broadway/read-model-elasticsearch": "Elasticsearch read model implementation",
+    "broadway/broadway-saga": "Saga component for Broadway",
+    "matiux/dublin-bundle": "Symfony bundle for matiux/dublin"
+  },
+  "autoload": {
+    "psr-4": {
+      "Broadway\\": "src/Broadway/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Broadway\\": "tests/Broadway/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "bash vendor/matiux/php-project-autopilot/src/configure.sh"
+    ],
+    "post-update-cmd": [
+      "bash vendor/matiux/php-project-autopilot/src/configure.sh"
+    ]
+  },
+  "config": {
+    "bump-after-update": true,
+    "sort-packages": true
+  }
 }

@@ -90,7 +90,8 @@ abstract class EventStoreManagementTest extends TestCase
     /** @test */
     public function it_visits_event_types()
     {
-        $visitedEvents = $this->visitEvents(Criteria::create()
+        $visitedEvents = $this->visitEvents(
+            Criteria::create()
             ->withEventTypes([
                 'Broadway.EventStore.Management.Testing.Start',
                 'Broadway.EventStore.Management.Testing.End',
@@ -116,7 +117,8 @@ abstract class EventStoreManagementTest extends TestCase
     {
         $this->expectException(CriteriaNotSupportedException::class);
 
-        $this->visitEvents(Criteria::create()
+        $this->visitEvents(
+            Criteria::create()
             ->withAggregateRootTypes([
                 'Broadway.EventStore.Management.Testing.AggregateTypeOne',
                 'Broadway.EventStore.Management.Testing.AggregateTypeTwo',

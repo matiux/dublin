@@ -36,7 +36,9 @@ class ConflictResolvingEventStoreTest extends EventStoreTest
             ->willReturn(true);
 
         $this->eventStore = new ConcurrencyConflictResolvingEventStore(
-            new InMemoryEventStore(), $this->concurrencyResolver->reveal());
+            new InMemoryEventStore(),
+            $this->concurrencyResolver->reveal()
+        );
     }
 
     /** @test */

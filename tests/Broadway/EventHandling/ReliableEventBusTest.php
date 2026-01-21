@@ -43,27 +43,36 @@ class ReliableEventBusTest extends TestCase
     /**
      * @test
      */
-    public function it_should_process_the_next_handle_when_a_handler_fails()
+    public function it_should_process_the_next_handle_when_a_handler_fails(): void
     {
         $domainMessage = $this->createDomainMessage([]);
-
         $domainEventStream = new DomainEventStream([$domainMessage]);
 
-        $eventListener1 = $this->createEventListenerMock();
+        $eventListener1 = $this->createMock(EventListener::class);
         $eventListener1
-            ->expects($this->exactly(0))
+            ->expects($this->once())
             ->method('handle')
+            ->with($domainMessage)
             ->willThrowException(new \Exception());
 
-        $eventListener2 = $this->prophesize(EventListener::class);
-        $eventListener2->handle($domainMessage)->shouldBeCalledOnce();
+        $eventListener2 = $this->createMock(EventListener::class);
+        $eventListener2
+            ->expects($this->once())
+            ->method('handle')
+            ->with($domainMessage);
 
         $this->eventBus->subscribe($eventListener1);
-        $this->eventBus->subscribe($eventListener2->reveal());
+        $this->eventBus->subscribe($eventListener2);
+
         $this->eventBus->publish($domainEventStream);
 
-        $this->assertTrue($this->testHandler->hasErrorThatContains(sprintf('[Event LISTENER]: %s', get_class($eventListener1))));
+        $this->assertTrue(
+            $this->testHandler->hasErrorThatContains(
+                sprintf('[Event LISTENER]: %s', $eventListener1::class)
+            )
+        );
     }
+
 
     /**
      * @test
@@ -86,69 +95,78 @@ class ReliableEventBusTest extends TestCase
     /**
      * @test
      */
-    public function it_publishes_events_to_subscribed_event_listeners()
+    public function it_publishes_events_to_subscribed_event_listeners(): void
     {
         $domainMessage1 = $this->createDomainMessage([]);
         $domainMessage2 = $this->createDomainMessage([]);
 
         $domainEventStream = new DomainEventStream([$domainMessage1, $domainMessage2]);
 
+        $calls1 = [];
         $eventListener1 = $this->createEventListenerMock();
         $eventListener1
-            ->expects($this->exactly(0))
+            ->expects($this->exactly(2))
             ->method('handle')
-            ->with($domainMessage1);
-        $eventListener1
-            ->expects($this->exactly(1))
-            ->method('handle')
-            ->with($domainMessage2);
+            ->willReturnCallback(function ($message) use (&$calls1): void {
+                $calls1[] = $message;
+            });
 
+        $calls2 = [];
         $eventListener2 = $this->createEventListenerMock();
         $eventListener2
-            ->expects($this->exactly(0))
+            ->expects($this->exactly(2))
             ->method('handle')
-            ->with($domainMessage1);
-        $eventListener2
-            ->expects($this->exactly(1))
-            ->method('handle')
-            ->with($domainMessage2);
+            ->willReturnCallback(function ($message) use (&$calls2): void {
+                $calls2[] = $message;
+            });
 
         $this->eventBus->subscribe($eventListener1);
         $this->eventBus->subscribe($eventListener2);
+
         $this->eventBus->publish($domainEventStream);
+
+        $this->assertSame([$domainMessage1, $domainMessage2], $calls1);
+        $this->assertSame([$domainMessage1, $domainMessage2], $calls2);
     }
+
 
     /**
      * @test
      */
-    public function it_does_not_dispatch_new_events_before_all_listeners_have_run()
+    public function it_does_not_dispatch_new_events_before_all_listeners_have_run(): void
     {
         $domainMessage1 = $this->createDomainMessage(['foo' => 'bar']);
         $domainMessage2 = $this->createDomainMessage(['foo' => 'bas']);
 
         $domainEventStream = new DomainEventStream([$domainMessage1]);
 
-        $eventListener1 = new SimpleEventBusTestListener($this->eventBus, new DomainEventStream([$domainMessage2]));
+        $eventListener1 = new SimpleEventBusTestListener(
+            $this->eventBus,
+            new DomainEventStream([$domainMessage2])
+        );
 
+        $calls = [];
         $eventListener2 = $this->createEventListenerMock();
         $eventListener2
-            ->expects($this->exactly(0))
+            ->expects($this->exactly(2))
             ->method('handle')
-            ->with($domainMessage1);
-        $eventListener2
-            ->expects($this->exactly(1))
-            ->method('handle')
-            ->with($domainMessage2);
+            ->willReturnCallback(function ($message) use (&$calls): void {
+                $calls[] = $message;
+            });
 
         $this->eventBus->subscribe($eventListener1);
         $this->eventBus->subscribe($eventListener2);
+
         $this->eventBus->publish($domainEventStream);
+
+        // Proprietà chiave: prima gestisce domainMessage1, poi (solo dopo) domainMessage2
+        $this->assertSame([$domainMessage1, $domainMessage2], $calls);
     }
 
     /**
      * @test
      */
-    public function it_should_still_publish_events_after_exception()
+    public function it_should_still_publish_events_after_exception(): void
     {
         $domainMessage1 = $this->createDomainMessage(['foo' => 'bar']);
         $domainMessage2 = $this->createDomainMessage(['foo' => 'bas']);
@@ -156,22 +174,27 @@ class ReliableEventBusTest extends TestCase
         $domainEventStream1 = new DomainEventStream([$domainMessage1]);
         $domainEventStream2 = new DomainEventStream([$domainMessage2]);
 
+        $calls = [];
         $eventListener = $this->createEventListenerMock();
         $eventListener
-            ->expects($this->exactly(0))
+            ->expects($this->exactly(2))
             ->method('handle')
-            ->with($domainMessage1)
-            ->will($this->throwException(new \Exception('I failed.')));
+            ->willReturnCallback(function ($message) use (&$calls, $domainMessage1): void {
+                $calls[] = $message;
 
-        $eventListener
-            ->expects($this->exactly(1))
-            ->method('handle')
-            ->with($domainMessage2);
+                if ($message == $domainMessage1) {
+                    throw new \Exception('I failed.');
+                }
+            });
 
         $this->eventBus->subscribe($eventListener);
 
+        // ReliableEventBus tipicamente "swallow-a" l'eccezione e continua (loggando).
+        // Quindi NON facciamo try/catch: se rilanciasse, il test fallirebbe qui.
         $this->eventBus->publish($domainEventStream1);
         $this->eventBus->publish($domainEventStream2);
+
+        $this->assertSame([$domainMessage1, $domainMessage2], $calls);
     }
 
     private function createEventListenerMock(): MockObject

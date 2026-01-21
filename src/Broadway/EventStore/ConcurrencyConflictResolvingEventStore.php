@@ -66,7 +66,8 @@ final class ConcurrencyConflictResolvingEventStore implements EventStore
                     $playhead,
                     $uncommittedEvent->getMetadata(),
                     $uncommittedEvent->getPayload(),
-                    $uncommittedEvent->getRecordedOn());
+                    $uncommittedEvent->getRecordedOn()
+                );
             }
 
             $this->append($id, new DomainEventStream($conflictResolvedEvents));
