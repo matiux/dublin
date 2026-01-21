@@ -111,13 +111,17 @@ coverage: ## Esegue tutta la suite di test e verifica la coverage generando anch
 
 # Static analysis ——————————————————————————————————————————————————————————————————————————————————————————————————————
 
-.PHONY: psalm
-psalm: ## Esegue l'analisi statica su tutto il progetto. Oppure uno specifico file: make psalm ARG=./file.php
-	$(COMPOSE_EXEC_PHP_NO_PSEUSO_TTY) $(PROJECT_TOOL) psalm $$ARG
+#.PHONY: psalm
+#psalm: ## Esegue l'analisi statica su tutto il progetto. Oppure uno specifico file: make psalm ARG=./file.php
+#	$(COMPOSE_EXEC_PHP_NO_PSEUSO_TTY) $(PROJECT_TOOL) psalm $$ARG
+#
+#.PHONY: psalm-taint
+#psalm-taint: ## Esegue i controlli di sicurezza basati su psalm
+#	$(COMPOSE_EXEC_PHP_NO_PSEUSO_TTY) $(PROJECT_TOOL) psalm-taint $$ARG
 
-.PHONY: psalm-taint
-psalm-taint: ## Esegue i controlli di sicurezza basati su psalm
-	$(COMPOSE_EXEC_PHP_NO_PSEUSO_TTY) $(PROJECT_TOOL) psalm-taint $$ARG
+.PHONY: stan
+psalm: ## Esegue l'analisi statica su tutto il progetto. Oppure uno specifico file: make psalm ARG=./file.php
+	$(COMPOSE_EXEC_PHP_NO_PSEUSO_TTY) $(PROJECT_TOOL) stan $$ARG
 
 # Dependencies vulnerabilities —————————————————————————————————————————————————————————————————————————————————————————
 
@@ -150,3 +154,41 @@ project: ## Wrapper per invocare il tool project all'interno del container php. 
 .PHONY: help
 help:	## Show this help
 	@grep -hE '^[A-Za-z0-9_ \-]*?:.*##.*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+
+#.DEFAULT_GOAL:=help
+#
+#.PHONY: dependencies
+#dependencies:
+#	composer install --no-interaction --no-suggest --no-scripts --ansi
+#
+#.PHONY: test
+#test:
+#	vendor/bin/phpunit --testdox --exclude-group=none --colors=always
+#
+#.PHONY: qa
+#qa: php-cs-fixer-ci phpstan
+#
+#.PHONY: php-cs-fixer
+#php-cs-fixer:
+#	vendor/bin/php-cs-fixer fix --no-interaction --allow-risky=yes --diff --verbose
+#
+#.PHONY: php-cs-fixer-ci
+#php-cs-fixer-ci:
+#	vendor/bin/php-cs-fixer fix --no-interaction --allow-risky=yes --diff --dry-run --verbose
+#
+#.PHONY: phpstan
+#phpstan:
+#	vendor/bin/phpstan analyse --level=5 src/
+#
+#.PHONY: changelog
+#changelog:
+#	git log $$(git describe --abbrev=0 --tags)...HEAD --no-merges --pretty=format:"* [%h](http://github.com/${TRAVIS_REPO_SLUG}/commit/%H) %s (%cN)"
+#
+#.PHONY: license
+#license:
+#	vendor/bin/docheader check --no-interaction --ansi -vvv {src,test,examples}
+#
+## Based on https://suva.sh/posts/well-documented-makefiles/
+#help:  ## Display this help
+#	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)

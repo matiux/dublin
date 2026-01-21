@@ -1,0 +1,41 @@
+networks:
+    dublin-network:
+        name: dublin-network
+        driver: bridge
+
+services:
+    dublin-php:
+        image: dublin-php
+        build: php
+        hostname: dublin
+        volumes:
+            - ../:/var/www/app:delegated
+            - ./data/shell_history:/home/ubuntu/shell_history
+        networks:
+            - dublin-network
+        environment:
+            - HISTFILE=/home/ubuntu/shell_history/.x_history
+        secrets:
+            -   source: id_rsa
+                target: /home/ubuntu/.ssh/id_rsa
+            -   source: id_rsa.pub
+                target: /home/ubuntu/.ssh/id_rsa.pub
+            -   source: known_hosts
+                target: /home/ubuntu/.ssh/known_hosts
+
+    conventional-commit-nodejs:
+        image: conventional-commit-nodejs
+        build: nodejs
+        working_dir: /var/www/app
+        volumes:
+            - ../.git:/var/www/app/.git
+        networks:
+            - dublin-network
+
+    structurizr-lite:
+        image: structurizr/lite:latest
+        volumes:
+            - ../docs:/usr/local/structurizr
+        environment:
+            - STRUCTURIZR_WORKSPACE_FILENAME=workspace
+        restart: unless-stopped
