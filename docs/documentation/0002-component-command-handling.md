@@ -1,14 +1,13 @@
-CommandHandling Component
-=========================
+## Command Handling Component
 
 Primitives to use commands in your application.
 
-## Command bus
+### Command bus
 
 An interface and two simple implementations of a command bus where commands can
 be dispatched on.
 
-## Command handler
+### Command handler
 
 An interface and convenient base class that command handlers can extend.
 
@@ -38,15 +37,10 @@ class ExampleCommandHandler extends SimpleCommandHandler
 }
 ```
 
-## Testing
+### Testing
 
-A helper to implement scenario based tests for command handlers that use an
-event store.
+A helper to implement scenario based tests for command handlers that use an event store.
 
-## Example
-
-The [`examples/`][examples] directory at the root of the project contains a
-runnable command handling example (`command-handling`). The code you find there
-contains comments with what is happening.
-
-[examples]: ../../examples/
+### Example
+The `examples/` directory at the root of the project contains a runnable command handling example (`command-handling`).
+The code you find there contains comments with what is happening. [examples/command-handling](../../examples/command-handling)

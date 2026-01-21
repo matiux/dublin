@@ -1,5 +1,4 @@
-Repository Component
-====================
+## Repository Component
 
 Component providing an abstraction of the storage of aggregates.
 

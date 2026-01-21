@@ -1,5 +1,4 @@
-Read Model Component
-====================
+## Read Model Component
 
 Add read models to your application.
 

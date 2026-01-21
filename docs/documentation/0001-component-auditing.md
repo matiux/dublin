@@ -1,19 +1,16 @@
-Auditing Component
-==================
+## Auditing Component
 
 Add an audit trail to your application. Currently enables you to log whether
 commands were successful or failed due to an exception.
 
-## Usage
+### Usage
 
 Register the `CommandLogger` event listener with the
 `EventDispatchingCommandHandler`. The logger will use the injected logger to
 log whether a command was executed successfully or errored.
 
-## Example
+### Example
 
-The [`examples/`][examples] directory at the root of the project contains a
-runnable auditing (`auditing`). The code you find there contains comments with
-what is happening.
-
-[examples]: ../../examples/
+The `examples/` directory at the root of the project contains a runnable auditing example (`auditing`).
+The code found in this directory includes inline comments explaining what is happening step by step.
+See the auditing example here: [examples/auditing](../../examples/auditing)
