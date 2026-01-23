@@ -120,7 +120,7 @@ coverage: ## Esegue tutta la suite di test e verifica la coverage generando anch
 #	$(COMPOSE_EXEC_PHP_NO_PSEUSO_TTY) $(PROJECT_TOOL) psalm-taint $$ARG
 
 .PHONY: stan
-psalm: ## Esegue l'analisi statica su tutto il progetto. Oppure uno specifico file: make psalm ARG=./file.php
+stan: ## Esegue l'analisi statica su tutto il progetto. Oppure uno specifico file: make stan ARG=./file.php
 	$(COMPOSE_EXEC_PHP_NO_PSEUSO_TTY) $(PROJECT_TOOL) stan $$ARG
 
 # Dependencies vulnerabilities —————————————————————————————————————————————————————————————————————————————————————————
