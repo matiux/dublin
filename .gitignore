@@ -1,7 +1,7 @@
 /vendor/
-composer.lock
 .php-cs-fixer.cache
 .phpunit.result.cache
+.idea
 
 # Structurizr local files
 docs/.structurizr/
